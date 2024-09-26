@@ -2,6 +2,9 @@ import { useMemo, useState } from "react";
 import { AuthContext, IAuthContext } from "./contexts";
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "./router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,7 +20,9 @@ function App() {
 
   return (
     <AuthContext.Provider value={contextValue}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </AuthContext.Provider>
   );
 }
