@@ -1,5 +1,7 @@
+import { Button } from "@/components/ui/button";
+
 function App() {
-  return <div>nCloneApp</div>;
+  return <Button>nCloneApp</Button>;
 }
 
 export default App;
