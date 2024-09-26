@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { AuthContext, IAuthContext } from "./contexts";
-import { Router } from "./router";
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "./router";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,7 +17,7 @@ function App() {
 
   return (
     <AuthContext.Provider value={contextValue}>
-      <Router />
+      <RouterProvider router={router} />
     </AuthContext.Provider>
   );
 }
