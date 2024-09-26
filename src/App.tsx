@@ -3,7 +3,7 @@ import { AuthContext, IAuthContext } from "./contexts";
 import { Router } from "./router";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const contextValue = useMemo<IAuthContext>(
     () => ({
