@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Votes } from "./Votes";
 import { CommentList } from "./CommentList";
+import { useVoteCreate } from "@/hooks";
 
 export type CommentCardProps = {
   comment: IComment;
@@ -10,6 +11,10 @@ export type CommentCardProps = {
 
 export function CommentCard({ comment }: CommentCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { mutateAsync: onVote } = useVoteCreate({
+    linkId: comment.linkId,
+    parentId: comment.parentId,
+  });
 
   const toggleExpanded = () => setIsExpanded(!isExpanded);
 
@@ -19,6 +24,7 @@ export function CommentCard({ comment }: CommentCardProps) {
         count={comment.votesCount}
         vote={comment.userVote}
         commentId={comment.id}
+        onVote={onVote}
       />
 
       <div className="flex-1">

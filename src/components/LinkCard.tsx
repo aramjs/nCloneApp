@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Votes } from "./Votes";
 import { CommentList } from "./CommentList";
+import { useVoteCreate } from "@/hooks";
 
 export type LinkCardProps = {
   link: ILink;
@@ -14,10 +15,20 @@ export function LinkCard({ link }: LinkCardProps) {
 
   const toggleExpanded = () => setIsExpanded(!isExpanded);
 
+  const { mutateAsync: onVote } = useVoteCreate({
+    linkId: link.id,
+    parentId: null,
+  });
+
   return (
     <Card className="w-full mx-auto">
       <CardContent className="p-4 flex items-start space-x-4">
-        <Votes count={link.votesCount} vote={link.userVote} linkId={link.id} />
+        <Votes
+          onVote={onVote}
+          count={link.votesCount}
+          vote={link.userVote}
+          linkId={link.id}
+        />
 
         <div className="flex-shrink-0">
           <img

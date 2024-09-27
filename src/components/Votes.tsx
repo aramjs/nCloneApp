@@ -1,4 +1,3 @@
-import { useVoteCreate } from "@/hooks";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 
 export type VotesProps = {
@@ -6,10 +5,11 @@ export type VotesProps = {
   count: number;
   linkId?: string;
   commentId?: string;
+  onVote(params: IVoteCreateInput): void;
 };
 
-export function Votes({ vote, count, linkId, commentId }: VotesProps) {
-  const { mutateAsync: onVote } = useVoteCreate();
+export function Votes({ vote, count, linkId, commentId, onVote }: VotesProps) {
+  // const { mutateAsync: onVote } = useVoteCreate();
 
   const onVoteHandler = (type: IVoteCreateInput["type"]) => {
     return onVote({

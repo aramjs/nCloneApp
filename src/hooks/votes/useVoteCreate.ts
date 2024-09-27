@@ -2,7 +2,12 @@ import { useAuth } from "@/contexts";
 import { getCreateFn } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useVoteCreate() {
+type Props = {
+  linkId: string | null;
+  parentId: string | null;
+};
+
+export function useVoteCreate(props: Props) {
   const { username } = useAuth();
   const queryClient = useQueryClient();
 
@@ -11,7 +16,7 @@ export function useVoteCreate() {
     onSuccess: async (_data, variables) => {
       const getQueryKey = () => {
         if (variables.linkId) return ["links"];
-        if (variables.commentId) return ["comments"];
+        if (variables.commentId) return ["comments", props];
       };
 
       const queryKey = getQueryKey();
