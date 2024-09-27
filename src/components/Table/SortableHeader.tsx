@@ -1,6 +1,6 @@
 import { Column } from "@tanstack/react-table";
 import { ReactNode } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 
 export function SortableHeader({

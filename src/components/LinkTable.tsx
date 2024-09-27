@@ -1,11 +1,25 @@
-import { ColumnDef, SortingState } from "@tanstack/react-table";
-import { SortablePaginatedTable } from "./SortablePaginatedTable";
-import { usePaginatedLinks, useUrlSearchParams } from "@/hooks";
+import { CellContext, ColumnDef, SortingState } from "@tanstack/react-table";
+import { useLinkUpdate, usePaginatedLinks, useUrlSearchParams } from "@/hooks";
 import { BaseSyntheticEvent, useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 import { formatDate } from "@/utils/common";
-import { SortableHeader } from "./SortableHeader";
 import { Input } from "./ui/input";
+import {
+  EditableTextCell,
+  SortableHeader,
+  SortablePaginatedTable,
+} from "./Table";
+
+const EditableCellWrapper = ({ cell }: CellContext<ILink, unknown>) => {
+  const { mutateAsync: onUpdate } = useLinkUpdate();
+
+  return (
+    <EditableTextCell
+      initialText={cell.row.original.title}
+      onSave={(title) => onUpdate({ id: cell.row.original.id, title })}
+    />
+  );
+};
 
 const columns: ColumnDef<ILink>[] = [
   {
@@ -31,6 +45,7 @@ const columns: ColumnDef<ILink>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Title</SortableHeader>
     ),
+    cell: EditableCellWrapper,
   },
   {
     accessorKey: "author.username",
@@ -71,7 +86,7 @@ export function LinkTable() {
   const onPageChange = (page: number) => setQueryParams({ page });
   const onSearch = (searchTerm: string) => {
     if (page) {
-      onPageChange(0);
+      onPageChange(1);
     }
     setQueryParams({ searchTerm });
   };

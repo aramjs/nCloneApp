@@ -13,3 +13,8 @@ type ILinkCreateInput = {
   image: string;
   title: string;
 };
+
+type ILinkUpdateInput = { id: string } & Partial<{
+  image: string;
+  title: string;
+}>;

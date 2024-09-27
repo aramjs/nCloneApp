@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts";
-import { getCreateFn } from "@/utils/api";
+import { getMutationFn } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type CommentFilters = Pick<IComment, "linkId" | "parentId">[];
@@ -9,7 +9,7 @@ export function useCommentCreate(filters: CommentFilters) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: getCreateFn<IComment, ICommentCreateInput>(
+    mutationFn: getMutationFn<IComment, ICommentCreateInput>(
       "comments",
       username
     ),

@@ -83,12 +83,24 @@ export function getFetchInfiniteList<T>(
   return fetchFn;
 }
 
-export function getCreateFn<TData, TVariables>(path: string, username: string) {
+export function getMutationFn<TData, TVariables extends { id?: string }>(
+  path: string,
+  username: string,
+  action: "create" | "update" | "delete" = "create"
+) {
   const createFn: MutationFunction<TData, TVariables> = async (data) => {
+    const method = {
+      create: "POST",
+      update: "PUT",
+      delete: "DELETE",
+    }[action];
+
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_API_URL}/${path}`,
+      `${import.meta.env.VITE_BASE_API_URL}/${path}${
+        ["update", "delete"].includes(action) ? `/${data.id}` : ""
+      }`,
       {
-        method: "POST",
+        method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${username}`,
