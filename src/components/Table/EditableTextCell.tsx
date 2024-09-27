@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 
 type EditableTextCellProps = {
@@ -14,6 +14,8 @@ export function EditableTextCell({
 }: EditableTextCellProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(initialText);
+
+  useEffect(() => setText(initialText), [initialText]);
 
   const handleClick = () => setIsEditing(true);
 

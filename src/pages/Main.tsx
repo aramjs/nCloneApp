@@ -72,7 +72,8 @@ export const Main: FC<PropsWithChildren> = ({ children }) => {
   return (
     <AuthContext.Provider value={contextValue}>
       <ModalContext.Provider value={modalValue}>
-        <Modal {...modalContext.modalProps!} />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <Modal {...(modalContext.modalProps as any)} />
         {children}
       </ModalContext.Provider>
     </AuthContext.Provider>

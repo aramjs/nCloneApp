@@ -48,7 +48,7 @@ export function CommentModal({ onClose, onSubmit }: CommentModalProps) {
     >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add a Reply</DialogTitle>
+          <DialogTitle>Add a Comment</DialogTitle>
           <DialogDescription>
             Type your comment below. Click save when you're done.
           </DialogDescription>

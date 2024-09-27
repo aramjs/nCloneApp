@@ -83,7 +83,7 @@ export function getFetchInfiniteList<T>(
   return fetchFn;
 }
 
-export function getMutationFn<TData, TVariables extends { id?: string }>(
+export function getMutationFn<TData, TVariables>(
   path: string,
   username: string,
   action: "create" | "update" | "delete" = "create"
@@ -97,7 +97,9 @@ export function getMutationFn<TData, TVariables extends { id?: string }>(
 
     const response = await fetch(
       `${import.meta.env.VITE_BASE_API_URL}/${path}${
-        ["update", "delete"].includes(action) ? `/${data.id}` : ""
+        ["update", "delete"].includes(action)
+          ? `/${(data as { id: string }).id}`
+          : ""
       }`,
       {
         method,

@@ -1,5 +1,10 @@
 import { CellContext, ColumnDef, SortingState } from "@tanstack/react-table";
-import { useLinkUpdate, usePaginatedLinks, useUrlSearchParams } from "@/hooks";
+import {
+  useLinkCreate,
+  useLinkUpdate,
+  usePaginatedLinks,
+  useUrlSearchParams,
+} from "@/hooks";
 import { BaseSyntheticEvent, useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 import { formatDate } from "@/utils/common";
@@ -9,6 +14,9 @@ import {
   SortableHeader,
   SortablePaginatedTable,
 } from "./Table";
+import { Button } from "./ui/button";
+import { useModal } from "@/contexts";
+import { FetchListParams } from "@/utils/api";
 
 const EditableCellWrapper = ({ cell }: CellContext<ILink, unknown>) => {
   const { mutateAsync: onUpdate } = useLinkUpdate();
@@ -74,14 +82,18 @@ const columns: ColumnDef<ILink>[] = [
 ];
 
 export function LinkTable() {
-  const [{ page = 1, searchTerm }, setQueryParams] = useUrlSearchParams<{
+  const [{ page = 1, searchTerm = "" }, setQueryParams] = useUrlSearchParams<{
     page: number;
     searchTerm: string;
   }>();
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { data } = usePaginatedLinks({ page, sorting, searchTerm });
+  const params: FetchListParams = { page, sorting, searchTerm };
+  const { mutateAsync: onCreate } = useLinkCreate(params);
+  const { data } = usePaginatedLinks(params);
+
+  const { openModal, closeModal } = useModal();
 
   const onPageChange = (page: number) => setQueryParams({ page });
   const onSearch = (searchTerm: string) => {
@@ -93,14 +105,25 @@ export function LinkTable() {
 
   const links = useMemo(() => data?.data || [], [data?.data]);
 
+  const onAddLink = () => {
+    openModal("CreateLinkModal", {
+      onSubmit: onCreate,
+      onClose: closeModal,
+    });
+  };
+
   return (
     <div className="container mx-auto p-10 flex flex-col gap-4">
-      <Input
-        className="py-4"
-        defaultValue={searchTerm}
-        placeholder="Search..."
-        onInput={(e: BaseSyntheticEvent) => onSearch(e.target.value)}
-      />
+      <div className="flex gap-4">
+        <Input
+          className="py-4"
+          defaultValue={searchTerm}
+          placeholder="Search..."
+          onInput={(e: BaseSyntheticEvent) => onSearch(e.target.value)}
+        />
+
+        <Button onClick={onAddLink}>Add Link</Button>
+      </div>
 
       <SortablePaginatedTable
         columns={columns}
