@@ -70,8 +70,6 @@ export function LinkTable() {
 
   const links = useMemo(() => data?.data || [], [data?.data]);
 
-  console.log(sorting);
-
   return (
     <div className="container mx-auto">
       <SortablePaginatedTable

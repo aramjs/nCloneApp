@@ -8,9 +8,15 @@ import { SortingState } from "@tanstack/react-table";
 function createQueryString({ sorting, ...options }: IOptions): string {
   const params = new URLSearchParams();
 
-  Object.entries({ ...options, sorting: JSON.stringify(sorting) }).forEach(
-    ([key, value]) => params.append(key, `${value}`)
-  );
+  Object.entries({
+    ...options,
+    sorting: JSON.stringify(
+      sorting?.map((sort) => ({
+        sortBy: sort.id,
+        sortDir: sort.desc ? "desc" : "asc",
+      }))
+    ),
+  }).forEach(([key, value]) => params.append(key, `${value}`));
 
   return params.toString();
 }
