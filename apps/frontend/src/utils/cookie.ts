@@ -1,4 +1,12 @@
-import { COOKIE_KEY } from "@/types/enums";
+import { ADMIN_ROUTES, COOKIE_KEY } from "@/types/enums";
+
+export const getUsername = () => {
+  const isAdmin = window.location.pathname.includes(ADMIN_ROUTES.HOME);
+
+  const cookieKey = isAdmin ? COOKIE_KEY.ADMIN_USERNAME : COOKIE_KEY.USERNAME;
+
+  return getCookie(cookieKey) || "";
+};
 
 export const getCookie = (name: COOKIE_KEY) => {
   const value = `; ${document.cookie}`;

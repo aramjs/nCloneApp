@@ -1,4 +1,3 @@
-import { useAuth } from "@/contexts";
 import { getMutationFn } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -8,11 +7,10 @@ type Props = {
 };
 
 export function useVoteCreate(props: Props) {
-  const { username } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: getMutationFn<IVote, IVoteCreateInput>("votes", username),
+    mutationFn: getMutationFn<IVote, IVoteCreateInput>("votes"),
     onSuccess: async (_data, variables) => {
       const getQueryKey = () => {
         if (variables.linkId) return ["links"];

@@ -7,15 +7,14 @@ import { Button } from "./ui/button";
 type FormValues = ILinkCreateInput;
 
 export type LinkFormProps = {
-  isLoading: boolean;
-  onSubmit(values: FormValues): Promise<void>;
+  onSubmit(values: FormValues): Promise<unknown>;
 };
 
-export function LinkForm({ isLoading, onSubmit }: LinkFormProps) {
+export function LinkForm({ onSubmit }: LinkFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>();
 
   return (
@@ -52,8 +51,8 @@ export function LinkForm({ isLoading, onSubmit }: LinkFormProps) {
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? (
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
             <Loader2 className="h-6 w-6 animate-spin" />
           ) : (
             "Add Link"

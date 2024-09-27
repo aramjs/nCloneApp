@@ -1,4 +1,4 @@
-import { AddLink, Home, Main } from "@/pages";
+import { AddLink, Home, Root } from "@/pages";
 import { ADMIN_ROUTES, ROUTES } from "@/types/enums";
 import {
   createRootRoute,
@@ -10,9 +10,9 @@ import { NotFound } from "./components";
 
 const rootRoute = createRootRoute({
   component: () => (
-    <Main>
+    <Root>
       <Outlet />
-    </Main>
+    </Root>
   ),
 });
 

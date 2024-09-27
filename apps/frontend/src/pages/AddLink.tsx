@@ -33,7 +33,7 @@ export function AddLink() {
       >
         <ChevronLeft /> Back
       </Button>
-      <LinkForm isLoading={isPending} onSubmit={onSubmit} />
+      <LinkForm onSubmit={onSubmit} />
     </div>
   );
 }

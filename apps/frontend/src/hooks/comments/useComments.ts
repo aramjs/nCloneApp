@@ -1,4 +1,3 @@
-import { useAuth } from "@/contexts";
 import { getFetchInfiniteList } from "@/utils/api";
 import {
   InfiniteData,
@@ -12,8 +11,6 @@ export const useComments = (
   options?: InfiniteQueryOptions<IComment>,
   filters?: CommentFilters
 ) => {
-  const { username } = useAuth();
-
   return useInfiniteQuery<
     IPage<IComment>,
     Error,
@@ -22,7 +19,7 @@ export const useComments = (
   >({
     queryKey: ["comments", filters],
     // @ts-expect-error there are mismatched types in the package
-    queryFn: getFetchInfiniteList<IComment>("comments", username, filters),
+    queryFn: getFetchInfiniteList<IComment>("comments", filters),
     getNextPageParam: (lastPage) => {
       const nextPage = lastPage.currentPage + 1;
 

@@ -1,3 +1,3 @@
 export * from "./Home";
 export * from "./AddLink";
-export * from "./Main";
+export * from "./Root";

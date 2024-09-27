@@ -4,18 +4,21 @@ import {
   QueryKey,
 } from "@tanstack/react-query";
 import { SortingState } from "@tanstack/react-table";
+import { getUsername } from "./cookie";
 
 function createQueryString({ sorting, ...options }: IOptions): string {
   const params = new URLSearchParams();
 
   Object.entries({
     ...options,
-    sorting: JSON.stringify(
-      sorting?.map((sort) => ({
-        sortBy: sort.id,
-        sortDir: sort.desc ? "desc" : "asc",
-      }))
-    ),
+    sorting: sorting
+      ? JSON.stringify(
+          sorting?.map((sort) => ({
+            sortBy: sort.id,
+            sortDir: sort.desc ? "desc" : "asc",
+          }))
+        )
+      : [],
   }).forEach(([key, value]) => params.append(key, `${value}`));
 
   return params.toString();
@@ -27,16 +30,12 @@ export type FetchListParams = Partial<{
   searchTerm: string;
 }>;
 
-export const fetchList = async (
-  path: string,
-  username: string,
-  params: FetchListParams
-) => {
+export const fetchList = async (path: string, params: FetchListParams) => {
   const response = await fetch(
     `${import.meta.env.VITE_BASE_API_URL}/${path}?${createQueryString(params)}`,
     {
       headers: {
-        Authorization: `Bearer ${username}`,
+        Authorization: `Bearer ${getUsername()}`,
       },
     }
   );
@@ -50,7 +49,6 @@ export const fetchList = async (
 
 export function getFetchInfiniteList<T>(
   path: string,
-  username: string,
   filters?: Record<string, string>
 ) {
   const fetchFn: QueryFunction<IPage<T>, QueryKey, number> = async ({
@@ -65,7 +63,7 @@ export function getFetchInfiniteList<T>(
       })}`,
       {
         headers: {
-          Authorization: `Bearer ${username}`,
+          Authorization: `Bearer ${getUsername()}`,
         },
         signal,
       }
@@ -85,10 +83,11 @@ export function getFetchInfiniteList<T>(
 
 export function getMutationFn<TData, TVariables>(
   path: string,
-  username: string,
   action: "create" | "update" | "delete" = "create"
 ) {
   const createFn: MutationFunction<TData, TVariables> = async (data) => {
+    const username = getUsername();
+
     const method = {
       create: "POST",
       update: "PUT",
