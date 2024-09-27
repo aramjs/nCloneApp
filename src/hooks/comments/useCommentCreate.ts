@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts";
 import { getCreateFn } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-type CommentFilters = Pick<IComment, "linkId" | "parentId">;
+type CommentFilters = Pick<IComment, "linkId" | "parentId">[];
 
 export function useCommentCreate(filters: CommentFilters) {
   const { username } = useAuth();
@@ -14,14 +14,13 @@ export function useCommentCreate(filters: CommentFilters) {
       username
     ),
     onSuccess: async (_data, variables) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["comments", filters],
-      });
-
-      await queryClient.refetchQueries({
-        queryKey: ["comments", filters],
-        exact: true,
-      });
+      await Promise.all(
+        filters.map((filter) => {
+          return queryClient.refetchQueries({
+            queryKey: ["comments", filter],
+          });
+        })
+      );
 
       if (variables.linkId && !variables.parentId) {
         await queryClient.invalidateQueries({

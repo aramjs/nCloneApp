@@ -13,23 +13,28 @@ export type CommentCardProps = {
 export function CommentCard({ comment }: CommentCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const params = { linkId: comment.linkId, parentId: comment.id };
-
   const { mutateAsync: onVote } = useVoteCreate({
     linkId: comment.linkId,
     parentId: comment.parentId,
   });
 
-  const { mutateAsync: onComment } = useCommentCreate(params);
+  const { mutateAsync: onComment } = useCommentCreate([
+    { linkId: comment.linkId, parentId: comment.parentId }, // current list
+    { linkId: comment.linkId, parentId: comment.id }, // subList
+  ]);
 
-  const toggleExpanded = () => setIsExpanded(!isExpanded);
+  const toggleExpanded = () => {
+    if (!comment.commentCount) return;
+    setIsExpanded(!isExpanded);
+  };
 
   const { openModal, closeModal } = useModal();
 
   const onAddComment = () => {
     openModal("CommentModal", {
       onClose: closeModal,
-      onSubmit: ({ text }) => onComment({ ...params, text }),
+      onSubmit: ({ text }) =>
+        onComment({ linkId: comment.linkId, parentId: comment.id, text }),
     });
   };
 
@@ -48,38 +53,37 @@ export function CommentCard({ comment }: CommentCardProps) {
           Submitted {formatDate(comment.createdAt)} by{" "}
           <span className="text-blue-800">{comment.author.username}</span>
         </div>
-        {!!comment.commentCount && (
-          <div className="mt-2">
-            <div className="flex gap-2 items-center">
-              <Button
-                variant="link"
-                size="sm"
-                onClick={toggleExpanded}
-                className="p-0 text-sm font-bold text-gray-500 hover:text-gray-500/50"
-              >
-                {isExpanded
-                  ? `Hide Replies (${comment.commentCount})`
-                  : `${comment.commentCount} replies`}
-              </Button>
 
-              <Button
-                variant="link"
-                size="sm"
-                className="p-0 text-sm font-bold text-blue-500 hover:text-blue-500/50"
-                onClick={onAddComment}
-              >
-                Add comment
-              </Button>
-            </div>
-            {isExpanded && (
-              <CommentList
-                enabled={isExpanded}
-                linkId={comment.linkId}
-                parentId={comment.id}
-              />
-            )}
+        <div className="mt-2">
+          <div className="flex gap-2 items-center">
+            <Button
+              variant="link"
+              size="sm"
+              onClick={toggleExpanded}
+              className="p-0 text-sm font-bold text-gray-500 hover:text-gray-500/50"
+            >
+              {isExpanded
+                ? `Hide Replies (${comment.commentCount})`
+                : `${comment.commentCount} replies`}
+            </Button>
+
+            <Button
+              variant="link"
+              size="sm"
+              className="p-0 text-sm font-bold text-blue-500 hover:text-blue-500/50"
+              onClick={onAddComment}
+            >
+              Add comment
+            </Button>
           </div>
-        )}
+          {isExpanded && (
+            <CommentList
+              enabled={isExpanded}
+              linkId={comment.linkId}
+              parentId={comment.id}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

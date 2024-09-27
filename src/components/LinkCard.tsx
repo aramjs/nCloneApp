@@ -12,14 +12,19 @@ export type LinkCardProps = {
 };
 
 export function LinkCard({ link }: LinkCardProps) {
-  const { mutateAsync: onComment } = useCommentCreate({
-    linkId: link.id,
-    parentId: null,
-  });
+  const { mutateAsync: onComment } = useCommentCreate([
+    {
+      linkId: link.id,
+      parentId: null,
+    },
+  ]);
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const toggleExpanded = () => setIsExpanded(!isExpanded);
+  const toggleExpanded = () => {
+    if (!link.commentCount) return;
+    setIsExpanded(!isExpanded);
+  };
 
   const { openModal, closeModal } = useModal();
 
@@ -67,39 +72,37 @@ export function LinkCard({ link }: LinkCardProps) {
             <span className="text-blue-800">{link.author.username}</span>
           </p>
 
-          {!!link.commentCount && (
-            <div className="mt-2">
-              <div className="flex gap-2 items-center">
-                <Button
-                  variant="link"
-                  size="sm"
-                  onClick={toggleExpanded}
-                  className="p-0 text-sm font-bold text-gray-500 hover:text-gray-500/50"
-                >
-                  {isExpanded
-                    ? `Hide Comments (${link.commentCount})`
-                    : `${link.commentCount} comments`}
-                </Button>
+          <div className="mt-2">
+            <div className="flex gap-2 items-center">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={toggleExpanded}
+                className="p-0 text-sm font-bold text-gray-500 hover:text-gray-500/50"
+              >
+                {isExpanded
+                  ? `Hide Comments (${link.commentCount})`
+                  : `${link.commentCount} comments`}
+              </Button>
 
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="p-0 text-sm font-bold text-blue-500 hover:text-blue-500/50"
-                  onClick={onAddComment}
-                >
-                  Add comment
-                </Button>
-              </div>
-
-              {isExpanded && (
-                <CommentList
-                  enabled={isExpanded}
-                  linkId={link.id}
-                  parentId={null}
-                />
-              )}
+              <Button
+                variant="link"
+                size="sm"
+                className="p-0 text-sm font-bold text-blue-500 hover:text-blue-500/50"
+                onClick={onAddComment}
+              >
+                Add comment
+              </Button>
             </div>
-          )}
+
+            {isExpanded && (
+              <CommentList
+                enabled={isExpanded}
+                linkId={link.id}
+                parentId={null}
+              />
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
