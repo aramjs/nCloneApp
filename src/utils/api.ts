@@ -21,17 +21,19 @@ function createQueryString({ sorting, ...options }: IOptions): string {
   return params.toString();
 }
 
+export type FetchListParams = Partial<{
+  page: number;
+  sorting: SortingState;
+  searchTerm: string;
+}>;
+
 export const fetchList = async (
   path: string,
-  page: number,
   username: string,
-  sorting: SortingState
+  params: FetchListParams
 ) => {
   const response = await fetch(
-    `${import.meta.env.VITE_BASE_API_URL}/${path}?${createQueryString({
-      page,
-      sorting,
-    })}`,
+    `${import.meta.env.VITE_BASE_API_URL}/${path}?${createQueryString(params)}`,
     {
       headers: {
         Authorization: `Bearer ${username}`,

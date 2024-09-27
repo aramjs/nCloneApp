@@ -42,8 +42,8 @@ export function SortablePaginatedTable<T>({
   });
 
   return (
-    <div className="w-full flex flex-col gap-4 min-h-screen p-10">
-      <div className="rounded-md border flex-1">
+    <div className="w-full flex flex-col gap-4 min-h-screen">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

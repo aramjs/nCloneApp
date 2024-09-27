@@ -1,10 +1,11 @@
 import { ColumnDef, SortingState } from "@tanstack/react-table";
 import { SortablePaginatedTable } from "./SortablePaginatedTable";
 import { usePaginatedLinks, useUrlSearchParams } from "@/hooks";
-import { useMemo, useState } from "react";
+import { BaseSyntheticEvent, useMemo, useState } from "react";
 import { Pagination } from "./Pagination";
 import { formatDate } from "@/utils/common";
 import { SortableHeader } from "./SortableHeader";
+import { Input } from "./ui/input";
 
 const columns: ColumnDef<ILink>[] = [
   {
@@ -20,7 +21,7 @@ const columns: ColumnDef<ILink>[] = [
         <img
           src={cell.row.original.image}
           alt=""
-          className="w-8 h-7 object-cover rounded"
+          className="w-10 h-8 object-cover rounded"
         />
       </div>
     ),
@@ -58,20 +59,34 @@ const columns: ColumnDef<ILink>[] = [
 ];
 
 export function LinkTable() {
-  const [{ page = 1 }, setQueryParams] = useUrlSearchParams<{
+  const [{ page = 1, searchTerm }, setQueryParams] = useUrlSearchParams<{
     page: number;
+    searchTerm: string;
   }>();
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { data } = usePaginatedLinks(page, sorting);
+  const { data } = usePaginatedLinks({ page, sorting, searchTerm });
 
   const onPageChange = (page: number) => setQueryParams({ page });
+  const onSearch = (searchTerm: string) => {
+    if (page) {
+      onPageChange(0);
+    }
+    setQueryParams({ searchTerm });
+  };
 
   const links = useMemo(() => data?.data || [], [data?.data]);
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto p-10 flex flex-col gap-4">
+      <Input
+        className="py-4"
+        defaultValue={searchTerm}
+        placeholder="Search..."
+        onInput={(e: BaseSyntheticEvent) => onSearch(e.target.value)}
+      />
+
       <SortablePaginatedTable
         columns={columns}
         data={links}
