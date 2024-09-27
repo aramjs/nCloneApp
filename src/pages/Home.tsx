@@ -1,20 +1,20 @@
-import { Navigation } from "@/components/Navigation";
 import { useAuth } from "@/contexts";
-import { ROUTES } from "@/types/enums";
-import { useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { LinkList, LinkTable, Login } from "@/components";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { Outlet, useLocation } from "@tanstack/react-router";
+import { ADMIN_ROUTES } from "@/types/enums";
 
 export function Home() {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const { signIn, isAuthenticated } = useAuth();
+  const isAdmin = useIsAdmin();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate({ to: ROUTES.LINK_LIST });
-    } else {
-      navigate({ to: ROUTES.SIGN_IN });
-    }
-  }, [isAuthenticated, navigate]);
+  if (!isAuthenticated) return <Login onSubmit={signIn} />;
 
-  return <Navigation />;
+  if (isAdmin) {
+    const isRoot = location.pathname === ADMIN_ROUTES.HOME;
+    return isRoot ? <LinkTable /> : <Outlet />;
+  }
+
+  return <LinkList />;
 }

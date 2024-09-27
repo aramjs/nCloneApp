@@ -1,43 +1,58 @@
-import { Home, LinkList, SignIn } from "@/pages";
-import { ROUTES } from "@/types/enums";
+import { AddLink, Home, Main } from "@/pages";
+import { ADMIN_ROUTES, ROUTES } from "@/types/enums";
 import {
   createRootRoute,
   createRoute,
   createRouter,
+  Outlet,
 } from "@tanstack/react-router";
+import { NotFound } from "./components";
 
 const rootRoute = createRootRoute({
-  component: () => <Home />,
+  component: () => (
+    <Main>
+      <Outlet />
+    </Main>
+  ),
 });
 
-// authenticated
-const linksRoute = createRoute({
+const homeRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: ROUTES.LINK_LIST,
-  component: () => <LinkList />,
+  path: ROUTES.HOME,
+  component: Home,
 });
 
 const aboutRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/about",
-  component: function About() {
-    return <div className="p-2">Hello from About!</div>;
-  },
+  path: ROUTES.ADD_LINK,
+  component: AddLink,
 });
 
-// unauthenticated
-const signInRoute = createRoute({
+const adminHomeRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: ROUTES.SIGN_IN,
-  component: () => <SignIn />,
+  path: ADMIN_ROUTES.HOME,
+  component: Home,
 });
 
-const authenticatedRoutes = [linksRoute, aboutRoute];
-const unauthenticatedRoutes = [signInRoute];
+const notFoundRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "*",
+  component: NotFound,
+});
+
+const adminNotFoundRoute = createRoute({
+  getParentRoute: () => adminHomeRoute,
+  path: "*",
+  component: NotFound,
+});
+
+adminHomeRoute.addChildren([adminNotFoundRoute]);
 
 const routeTree = rootRoute.addChildren([
-  ...authenticatedRoutes,
-  ...unauthenticatedRoutes,
+  homeRoute,
+  aboutRoute,
+  adminHomeRoute,
+  notFoundRoute,
 ]);
 
 export const router = createRouter({ routeTree });

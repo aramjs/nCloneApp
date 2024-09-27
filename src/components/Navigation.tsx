@@ -1,10 +1,13 @@
+import { useAuth } from "@/contexts";
 import { ROUTES } from "@/types/enums";
 import { Link, Outlet } from "@tanstack/react-router";
 
 export function Navigation() {
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <div className="p-2 flex gap-2">
+        {`${isAuthenticated}`}
         <Link to={ROUTES.LINK_LIST} className="[&.active]:font-bold">
           LINKS
         </Link>

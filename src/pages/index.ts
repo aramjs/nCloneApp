@@ -1,3 +1,3 @@
 export * from "./Home";
-export * from "./LinkList";
-export * from "./SignIn";
+export * from "./AddLink";
+export * from "./Main";

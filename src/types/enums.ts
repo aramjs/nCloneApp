@@ -1,5 +1,13 @@
 export enum ROUTES {
   HOME = "/",
-  LINK_LIST = "/links",
-  SIGN_IN = "/sign-in",
+  ADD_LINK = "/add-link",
+}
+
+export enum ADMIN_ROUTES {
+  HOME = "/admin",
+}
+
+export enum COOKIE_KEY {
+  USERNAME = "username",
+  ADMIN_USERNAME = "admin_username",
 }
