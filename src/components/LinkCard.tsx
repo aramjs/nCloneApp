@@ -4,16 +4,37 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Votes } from "./Votes";
 import { CommentList } from "./CommentList";
-import { useVoteCreate } from "@/hooks";
+import { useCommentCreate, useVoteCreate } from "@/hooks";
+import { useModal } from "@/contexts";
 
 export type LinkCardProps = {
   link: ILink;
 };
 
 export function LinkCard({ link }: LinkCardProps) {
+  const { mutateAsync: onComment } = useCommentCreate({
+    linkId: link.id,
+    parentId: null,
+  });
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => setIsExpanded(!isExpanded);
+
+  const { openModal, closeModal } = useModal();
+
+  const onAddComment = () => {
+    openModal("CommentModal", {
+      onClose: closeModal,
+      onSubmit: ({ text }) => {
+        return onComment({
+          linkId: link.id,
+          parentId: null,
+          text,
+        });
+      },
+    });
+  };
 
   const { mutateAsync: onVote } = useVoteCreate({
     linkId: link.id,
@@ -47,15 +68,28 @@ export function LinkCard({ link }: LinkCardProps) {
           </p>
 
           {!!link.commentCount && (
-            <div>
-              <Button
-                variant="link"
-                size="sm"
-                onClick={toggleExpanded}
-                className="p-0 text-sm font-bold text-gray-500 hover:text-gray-500/50"
-              >
-                {isExpanded ? "Hide Comments" : `${link.commentCount} comments`}
-              </Button>
+            <div className="mt-2">
+              <div className="flex gap-2 items-center">
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={toggleExpanded}
+                  className="p-0 text-sm font-bold text-gray-500 hover:text-gray-500/50"
+                >
+                  {isExpanded
+                    ? `Hide Comments (${link.commentCount})`
+                    : `${link.commentCount} comments`}
+                </Button>
+
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="p-0 text-sm font-bold text-blue-500 hover:text-blue-500/50"
+                  onClick={onAddComment}
+                >
+                  Add comment
+                </Button>
+              </div>
 
               {isExpanded && (
                 <CommentList

@@ -9,8 +9,6 @@ export type VotesProps = {
 };
 
 export function Votes({ vote, count, linkId, commentId, onVote }: VotesProps) {
-  // const { mutateAsync: onVote } = useVoteCreate();
-
   const onVoteHandler = (type: IVoteCreateInput["type"]) => {
     return onVote({
       type: type === vote?.type ? null : type,

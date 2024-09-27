@@ -9,3 +9,9 @@ type IComment = {
   votesCount: number;
   userVote?: IVote;
 };
+
+type ICommentCreateInput = {
+  text: string;
+  linkId: string | null;
+  parentId: string | null;
+};
