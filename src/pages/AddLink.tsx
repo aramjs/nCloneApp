@@ -8,21 +8,19 @@ import { useLinkCreate } from "@/hooks";
 import { LinkForm, LinkFormProps } from "@/components";
 import { useCallback } from "react";
 import { ChevronLeft } from "lucide-react";
-import { useAuth } from "@/contexts";
 
 export function AddLink() {
   const navigate = useNavigate();
-  const { username } = useAuth();
 
   const { mutateAsync, isPending } = useLinkCreate();
 
   const onSubmit = useCallback<LinkFormProps["onSubmit"]>(
     async (values) => {
-      await mutateAsync({ ...values, username });
+      await mutateAsync({ ...values });
 
       navigate({ to: ROUTES.HOME });
     },
-    [mutateAsync, navigate, username]
+    [mutateAsync, navigate]
   );
 
   return (

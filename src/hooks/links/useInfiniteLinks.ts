@@ -1,12 +1,12 @@
 import { useAuth } from "@/contexts";
-import { getFetchList } from "@/utils/api";
+import { getFetchInfiniteList } from "@/utils/api";
 import {
   InfiniteData,
   QueryKey,
   useInfiniteQuery,
 } from "@tanstack/react-query";
 
-export const useLinks = (options?: InfiniteQueryOptions<ILink>) => {
+export const useInfiniteLinks = (options?: InfiniteQueryOptions<ILink>) => {
   const { username } = useAuth();
 
   return useInfiniteQuery<
@@ -17,7 +17,7 @@ export const useLinks = (options?: InfiniteQueryOptions<ILink>) => {
   >({
     queryKey: ["links"],
     // @ts-expect-error there are mismatched types in the package
-    queryFn: getFetchList<ILink>("links", username),
+    queryFn: getFetchInfiniteList<ILink>("links", username),
     getNextPageParam: (lastPage) => {
       const nextPage = lastPage.currentPage + 1;
 

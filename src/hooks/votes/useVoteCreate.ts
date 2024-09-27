@@ -22,7 +22,6 @@ export function useVoteCreate(props: Props) {
       const queryKey = getQueryKey();
 
       if (queryKey) {
-        await queryClient.invalidateQueries({ queryKey });
         await queryClient.refetchQueries({ queryKey, exact: true });
       }
     },

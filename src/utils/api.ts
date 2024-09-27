@@ -3,18 +3,44 @@ import {
   QueryFunction,
   QueryKey,
 } from "@tanstack/react-query";
+import { SortingState } from "@tanstack/react-table";
 
-function createQueryString(options: IOptions): string {
+function createQueryString({ sorting, ...options }: IOptions): string {
   const params = new URLSearchParams();
 
-  Object.entries(options || {}).forEach(([key, value]) =>
-    params.append(key, `${value}`)
+  Object.entries({ ...options, sorting: JSON.stringify(sorting) }).forEach(
+    ([key, value]) => params.append(key, `${value}`)
   );
 
   return params.toString();
 }
 
-export function getFetchList<T>(
+export const fetchList = async (
+  path: string,
+  page: number,
+  username: string,
+  sorting: SortingState
+) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_BASE_API_URL}/${path}?${createQueryString({
+      page,
+      sorting,
+    })}`,
+    {
+      headers: {
+        Authorization: `Bearer ${username}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return response.json();
+};
+
+export function getFetchInfiniteList<T>(
   path: string,
   username: string,
   filters?: Record<string, string>

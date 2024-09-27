@@ -23,10 +23,6 @@ export function useCommentCreate(filters: CommentFilters) {
       );
 
       if (variables.linkId && !variables.parentId) {
-        await queryClient.invalidateQueries({
-          queryKey: ["links"],
-        });
-
         await queryClient.refetchQueries({
           queryKey: ["links"],
           exact: true,

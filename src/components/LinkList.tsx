@@ -2,7 +2,7 @@ import { memo, useMemo } from "react";
 import { InfiniteScroll } from "./InfiniteScroll";
 import { LinkCard } from "./LinkCard";
 import { Button } from "@/components/ui/button";
-import { useLinks } from "@/hooks";
+import { useInfiniteLinks } from "@/hooks";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/types/enums";
 
@@ -10,7 +10,7 @@ function LinkListInner() {
   const navigate = useNavigate();
 
   const { data, isFetching, isRefetching, hasNextPage, fetchNextPage } =
-    useLinks();
+    useInfiniteLinks();
 
   const links = useMemo(
     () => data?.pages.flatMap((page) => page.data) || [],

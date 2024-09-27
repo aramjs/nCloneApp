@@ -1,6 +1,7 @@
 type IOptions = {
   page?: number;
   limit?: number;
+  sorting?: import("@tanstack/react-table").SortingState;
 };
 
 type IPage<T> = {
@@ -16,7 +17,7 @@ type InfiniteQueryOptions<T> = Partial<
     import("@tanstack/react-query").DefinedInitialDataInfiniteOptions<
       InfiniteQueryResponse<T>
     >,
-    "queryFn" | "getNextPageParam" | "queryKey"
+    "queryFn" | "getNextPageParam" | "getPreviousPageParam" | "queryKey"
   >
 >;
 

@@ -9,9 +9,6 @@ export function useLinkCreate() {
   return useMutation({
     mutationFn: getCreateFn<ILink, ILinkCreateInput>("links", username),
     onSuccess: async () => {
-      // Invalidate and refetch the 'links' queries
-      await queryClient.invalidateQueries({ queryKey: ["links"] });
-      // Optionally, you can refetch the queries if needed
       await queryClient.refetchQueries({ queryKey: ["links"], exact: true });
     },
   });
